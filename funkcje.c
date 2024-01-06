@@ -1,0 +1,1 @@
+//tu potem dodaje sie implementacje funkcji, trzeba stworzyc tez plik naglowkowy do tego
