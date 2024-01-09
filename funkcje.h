@@ -14,7 +14,7 @@ typedef struct plansza_podstawa{
 
 plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy);
 
-int narysuj_plansze(plansza_podstawa p);
+int narysuj_plansze(plansza_podstawa p,int liczba_iteracji);
 
 void zwolnij_plansze(plansza_podstawa p);
 

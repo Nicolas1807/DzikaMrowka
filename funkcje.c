@@ -166,7 +166,7 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
     return 0;
 }
 
-int narysuj_plansze(plansza_podstawa p){
+int narysuj_plansze(plansza_podstawa p,int liczba_iteracji){
 
     WNDCLASSEX wc;
     MSG ms;
