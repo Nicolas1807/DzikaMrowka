@@ -56,7 +56,9 @@ int main(int argc, char **argv){
     for(index = optind; index< argc; index++){
         printf("Non-option argument %s\n",argv[index]);
     }
+
     plansza_podstawa p = zainicjuj_plansze(n,m,it);
+
     
     if(p == NULL)
     {

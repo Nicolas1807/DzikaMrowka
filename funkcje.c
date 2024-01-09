@@ -112,6 +112,7 @@ VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
         wykonajRuch();
         InvalidateRect(hwnd, NULL, TRUE);
         UpdateWindow(hwnd);
+        wyswietlCmd(p);
     }
     else{
         PostMessage(hwnd, WM_DESTROY, 0, 0);
@@ -138,7 +139,7 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(h, &ps);
 
-        wyswietlCmd(p);
+        
 
         for (int x = 0; x < p->liczba_wierszy; x++)
         {
