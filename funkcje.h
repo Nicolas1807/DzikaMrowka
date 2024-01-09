@@ -8,16 +8,20 @@ typedef struct plansza_podstawa{
     int liczba_kolumn;
     int liczba_wierszy;
     int antDirection;
+    int AntX;
+    int AntY;
+    int ile_iteracji;
 
 }*plansza_podstawa;
 
 
-plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy);
+plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int iteracje);
 
 int narysuj_plansze(plansza_podstawa p);
 
 void zwolnij_plansze(plansza_podstawa p);
 
+void wyswietlCmd(plansza_podstawa p);
 
 
 #endif

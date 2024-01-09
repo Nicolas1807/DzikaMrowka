@@ -7,6 +7,11 @@ char ClassName[] = "SimpleWinClass";
 int cellSize = 10;
 int playerX, playerY;
 
+VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
+{
+    // Do nothing in this example
+}
+
 LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
 {
     switch (uMsg)
@@ -15,6 +20,8 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         // Initialize player position to the center of the grid
         playerX = 500;
         playerY = 500;
+
+        SetTimer(h, 1, 1000, TimerProc);
         break;
     case WM_PAINT:
     {
@@ -39,8 +46,15 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         EndPaint(h, &ps);
         break;
     }
+
+    case WM_TIMER:
+        // Handle timer events (1-second delay)
+        InvalidateRect(h, NULL, TRUE);
+        break;
+        
     case WM_DESTROY:
     {
+        KillTimer(h, 1);
         PostQuitMessage(0);
         return 0;
     }
