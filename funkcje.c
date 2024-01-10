@@ -127,8 +127,9 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
     {
     //Odpala sie na poczatku (default ustawienie mrówy)
     case WM_CREATE:
-        playerX = round((p->liczba_kolumn*cellSize)/2);
-        playerY = round((p->liczba_wierszy*cellSize)/2);
+
+        playerX = round(p->liczba_kolumn/2)*cellSize;
+        playerY = round(p->liczba_wierszy/2)*cellSize;
 
         SetTimer(h, 1, 1000, TimerProc);
         break;
@@ -141,9 +142,9 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
 
         
 
-        for (int x = 0; x < p->liczba_wierszy; x++)
+        for (int y = 0; y < p->liczba_wierszy; y++)
         {
-            for (int y = 0; y < p->liczba_kolumn; y++)
+            for (int x = 0; x < p->liczba_kolumn; x++)
             {
                 if (p->template[y][x] == 0) {
                     // Black rectangle
@@ -175,6 +176,7 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         
         break;
     case WM_DESTROY:
+
     {
         KillTimer(h, 1);
         PostQuitMessage(0);
@@ -218,7 +220,7 @@ int narysuj_plansze(plansza_podstawa p){
 
     
 
-    h = CreateWindowEx(0, "MyClassName", "Mruwa", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,  p->liczba_wierszy*cellSize+20,p->liczba_kolumn*cellSize+40, 0, 0, GetModuleHandle(NULL), 0);
+    h = CreateWindowEx(0, "MyClassName", "Mruwa", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,  p->liczba_kolumn*cellSize+20,p->liczba_wierszy*cellSize+40, 0, 0, GetModuleHandle(NULL), 0);
 
     if (!h)
         return 0;
