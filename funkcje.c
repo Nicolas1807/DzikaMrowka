@@ -23,66 +23,65 @@ plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int it
      p =  malloc(sizeof(*p));
      srand(time(NULL));
      int randomNum;
-     if(p==NULL){
+
+     if(p == NULL){
         fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci wierszy\n");
         return NULL;
      }
+
      p->template = (int**)malloc(liczba_wierszy *sizeof(int*));
+
      if(p->template==NULL){
         fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci wierszy\n");
         return NULL;
      }
 
-    // if(in != NULL)
-    // {
-    //     int** templateInput = (int**)malloc(liczba_wierszy *sizeof(int*));
-    //     if(templateInput==NULL){
-    //         fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci wierszy\n");
-    //         return NULL;
-    //     }
-    //     char pomocniczy;
-    //     int wiersze = 0;
-    //     int kolumny = 0;
-    //     while ((pomocniczy = fgetc(in)) != EOF) 
-    //     {
-    //         templateInput[wiersze][kolumny] = pomocniczy;
-    //         kolumny++;
-    //         if(kolumny>=p->liczba_kolumn)
-    //         {
-    //             wiersze++;
-    //             kolumny = 0;
-    //         }
-    //         if(wiersze>=p->liczba_wierszy)
-    //         {
-    //             printf("Błąd w chuj");
-    //             return NULL;
-    //         }
-    //     }
-    // }
-
     
-
-
-     for(int i = 0; i< liczba_wierszy;i++){
+    for (int i = 0; i < liczba_wierszy; i++) {
         p->template[i] = (int*)malloc(liczba_kolumn * sizeof(int));
-        if(p->template[i] == NULL){
-            fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci kolumn\n");
+
+        if (p->template[i] == NULL) {
+            fprintf(stderr, "Nie udało się utworzyć tablicy, błąd alokacji pamięci kolumn\n");
             return NULL;
         }
-        for(int j = 0; j<liczba_kolumn; j++)
-        {
-            //TU MOZNA DAWAC MRUWIE PRZESZKODY PRZY GENEROWANIU MAPY (COOOOOO? NO WAY)
 
-            randomNum = rand()%100;     
-            if(randomNum < getRandomMap)
-            {
+        for (int j = 0; j < liczba_kolumn; j++) {
+            randomNum = rand() % 100;
+            if (randomNum < getRandomMap) {
                 p->template[i][j] = 1;
-            }
-            else{
+            } else {
                 p->template[i][j] = 0;
             }
         }
-     }
+    }
+
+    if(in != NULL)
+    {
+        char pomocniczy;
+        int wiersze = 0;
+        int kolumny = 0;
+        while ((pomocniczy = fgetc(in)) != EOF) 
+        {
+            if ((pomocniczy - '0') == 1)
+            {
+                p->template[wiersze][kolumny] = pomocniczy- '0';
+            }
+
+            kolumny++;
+            if(kolumny == liczba_kolumn)
+            {
+                wiersze++;
+                kolumny = 0;
+            }
+            if(wiersze == liczba_wierszy)
+            {
+                break;
+            }
+        }
+    }
+
+    
+
      p->files = (FILE**)malloc(iteracje * sizeof(*p->files));
      p->liczba_kolumn = liczba_kolumn;
      p->liczba_wierszy = liczba_wierszy;
@@ -91,10 +90,10 @@ plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int it
      p->NazwaFolderu = nazwaFolderu;
      p->antDirection = direction;
      p->tryb = tryb;
-     printf("%s", p->NazwaFolderu);
      // to potem pojdzie do funkcji rozpoczynajacej animacje ruchow mrowy
      return p;
 }
+
 void ruch_w_prawo(){
     p->antDirection++;
     if(p->antDirection>WLEWO){
@@ -125,10 +124,8 @@ void ruszDoPrzodu(){
     {
         p->AntX -= 1;   
     }
-    else{
-        printf("Blaaadd");
-    }
 }
+
 void wykonajRuch(){
     
     
@@ -136,7 +133,6 @@ void wykonajRuch(){
     
     iteracja++;
     
-    // printf("%d", p->antDirection);
     
     if (p->template[p->AntY][p->AntX]==0){
         ruch_w_prawo();
@@ -237,9 +233,9 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         
         break;
     case WM_DESTROY:
-
     {
         KillTimer(h, 1);
+        printf("wylacza sie");
         PostQuitMessage(0);
         return 0;
     }
@@ -325,6 +321,7 @@ int narysuj_plansze(plansza_podstawa p){
                 Sleep(1000);
             }
         }
+        return 0;
     }
 
 }

@@ -114,5 +114,6 @@ int main(int argc, char **argv){
     narysuj_plansze(p);
     zwolnij_plansze(p);
     fclose(inputf);
+
     return 0;
 }
