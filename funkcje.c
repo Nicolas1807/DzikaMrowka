@@ -18,8 +18,11 @@ int playerX, playerY;
 int iteracja = 0;
 plansza_podstawa p;
 
-plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int iteracje, int tryb, char* nazwaFolderu, int direction){
+plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int iteracje, int tryb, char* nazwaFolderu, int direction, int getRandomMap, FILE *in){
+     
      p =  malloc(sizeof(*p));
+     srand(time(NULL));
+     int randomNum;
      if(p==NULL){
         fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci wierszy\n");
         return NULL;
@@ -29,6 +32,37 @@ plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int it
         fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci wierszy\n");
         return NULL;
      }
+
+    // if(in != NULL)
+    // {
+    //     int** templateInput = (int**)malloc(liczba_wierszy *sizeof(int*));
+    //     if(templateInput==NULL){
+    //         fprintf(stderr,"Nie udało się utworzyć tablicy, błąd alokacji pamięci wierszy\n");
+    //         return NULL;
+    //     }
+    //     char pomocniczy;
+    //     int wiersze = 0;
+    //     int kolumny = 0;
+    //     while ((pomocniczy = fgetc(in)) != EOF) 
+    //     {
+    //         templateInput[wiersze][kolumny] = pomocniczy;
+    //         kolumny++;
+    //         if(kolumny>=p->liczba_kolumn)
+    //         {
+    //             wiersze++;
+    //             kolumny = 0;
+    //         }
+    //         if(wiersze>=p->liczba_wierszy)
+    //         {
+    //             printf("Błąd w chuj");
+    //             return NULL;
+    //         }
+    //     }
+    // }
+
+    
+
+
      for(int i = 0; i< liczba_wierszy;i++){
         p->template[i] = (int*)malloc(liczba_kolumn * sizeof(int));
         if(p->template[i] == NULL){
@@ -38,7 +72,15 @@ plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int it
         for(int j = 0; j<liczba_kolumn; j++)
         {
             //TU MOZNA DAWAC MRUWIE PRZESZKODY PRZY GENEROWANIU MAPY (COOOOOO? NO WAY)
-            p->template[i][j] = 0;
+
+            randomNum = rand()%100;     
+            if(randomNum < getRandomMap)
+            {
+                p->template[i][j] = 1;
+            }
+            else{
+                p->template[i][j] = 0;
+            }
         }
      }
      p->files = (FILE**)malloc(iteracje * sizeof(*p->files));
@@ -95,6 +137,7 @@ void wykonajRuch(){
     iteracja++;
     
     // printf("%d", p->antDirection);
+    
     if (p->template[p->AntY][p->AntX]==0){
         ruch_w_prawo();
         p->template[p->AntY][p->AntX] = 1;
@@ -115,10 +158,18 @@ VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
     // Do nothing in this example
     if(iteracja < p->ile_iteracji)
     {
-        wyswietlCmd(p, iteracja);
-        wykonajRuch();
-        InvalidateRect(hwnd, NULL, TRUE);
-        UpdateWindow(hwnd);
+        if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntX>p->liczba_wierszy-1))
+        {
+                printf("Mrowiszon wyjebal za mape");
+                PostMessage(hwnd, WM_DESTROY, 0, 0);
+        }
+        else
+        {
+            wyswietlCmd(p, iteracja);
+            wykonajRuch();
+            InvalidateRect(hwnd, NULL, TRUE);
+            UpdateWindow(hwnd);
+        }
         
         
     }
@@ -260,11 +311,19 @@ int narysuj_plansze(plansza_podstawa p){
     {
         p->AntX = round(p->liczba_kolumn/2);
         p->AntY = round(p->liczba_wierszy/2);
+
         for(int i = 0; i<p->ile_iteracji; i++)
         {
-            wyswietlCmd(p, i);
-            wykonajRuch();
-            Sleep(1000);
+            if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntX>p->liczba_wierszy-1))
+            {
+                printf("Mrowiszon wyjebal za mape");
+                return 1;
+            }
+            else{
+                wyswietlCmd(p, i);
+                wykonajRuch();
+                Sleep(1000);
+            }
         }
     }
 

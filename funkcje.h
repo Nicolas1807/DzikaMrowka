@@ -20,7 +20,7 @@ typedef struct plansza_podstawa{
 }*plansza_podstawa;
 
 
-plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int iteracje, int tryb, char* nazwaFolderu, int direction);
+plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int iteracje, int tryb, char* nazwaFolderu, int direction, int getRandomMap, FILE* in);
 
 int narysuj_plansze(plansza_podstawa p);
 

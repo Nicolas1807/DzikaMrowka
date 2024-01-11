@@ -15,18 +15,21 @@ int main(int argc, char **argv){
     char *kvalue = NULL;
     char *ivalue = NULL;
     char *dvalue = NULL;
+    char *rvalue = NULL;
     char *trybvalue = NULL;
     int index;
     int c;
     opterr = 0;
+    int getRandomMap = 0;
     int m = 10;
     int n = 20;
     int direction = 0;
     int it = 10;
     int tryb = 0;
-    char *file = NULL; // Initialize to NULL
+    char *folder = NULL; // Initialize to NULL
+    char *plik = NULL; 
 
-    while ((c = getopt(argc, argv, "w:k:i:m:f:d:")) != -1) {
+    while ((c = getopt(argc, argv, "w:k:i:m:f:d:r:p:")) != -1) {
         switch (c) {
             case 'd':      
                 dvalue = optarg;
@@ -36,6 +39,14 @@ int main(int argc, char **argv){
                     printf("Nalezy podac liczbe od 1 do 3");
                     return 1;
                 }
+                break;
+            case 'r':      
+                rvalue = optarg;
+                getRandomMap = atoi(rvalue);
+                 if ((getRandomMap < 0) || (getRandomMap > 100)) {
+                        fprintf(stderr, "Program posiada tylko 2 tryby: 1 - wygeneruj lososwo mape, 0 - Pusta Mapa%d.\n");
+                        return 1;
+                    }
                 break;
             case 'w':
                 wvalue = optarg;
@@ -62,7 +73,11 @@ int main(int argc, char **argv){
                 }
                 break;
             case 'f':
-                file = optarg;
+                folder = optarg;
+                printf("haloooo\n");
+                break;
+            case 'p':
+                plik = optarg;
                 printf("haloooo\n");
                 break;
             case '?':
@@ -84,15 +99,20 @@ int main(int argc, char **argv){
         printf("Non-option argument %s\n",argv[index]);
     }
 
-    plansza_podstawa p = zainicjuj_plansze(n,m,it,tryb,file, direction);
+    FILE*inputf = fopen(plik, "r");
+    
+
+    plansza_podstawa p = zainicjuj_plansze(n,m,it,tryb,folder, direction, getRandomMap, inputf);
 
     
     if(p == NULL)
     {
         printf("Nie udalo sie przydzielic pamieci dla planszy %d x %d", m, n); 
+        return 1;
     }
    
     narysuj_plansze(p);
     zwolnij_plansze(p);
+    fclose(inputf);
     return 0;
 }
