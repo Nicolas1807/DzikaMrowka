@@ -90,6 +90,8 @@ plansza_podstawa zainicjuj_plansze(int liczba_kolumn, int liczba_wierszy, int it
      p->NazwaFolderu = nazwaFolderu;
      p->antDirection = direction;
      p->tryb = tryb;
+     p->AntX = round(p->liczba_kolumn/2);
+     p->AntY = round(p->liczba_wierszy/2);
      // to potem pojdzie do funkcji rozpoczynajacej animacje ruchow mrowy
      return p;
 }
@@ -129,10 +131,6 @@ void ruszDoPrzodu(){
 void wykonajRuch(){
     
     
-
-    
-    iteracja++;
-    
     
     if (p->template[p->AntY][p->AntX]==0){
         ruch_w_prawo();
@@ -154,15 +152,18 @@ VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
     // Do nothing in this example
     if(iteracja < p->ile_iteracji)
     {
-        if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntX>p->liczba_wierszy-1))
+        if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntY>p->liczba_wierszy-1))
         {
+                printf("%d", p->AntY);
+                printf("%d", p->liczba_wierszy);
                 printf("Mrowiszon wyjebal za mape");
                 PostMessage(hwnd, WM_DESTROY, 0, 0);
         }
         else
-        {
+        {      
             wyswietlCmd(p, iteracja);
             wykonajRuch();
+            iteracja++;
             InvalidateRect(hwnd, NULL, TRUE);
             UpdateWindow(hwnd);
         }
@@ -180,14 +181,13 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
     
     switch (uMsg)
     {
+
     //Odpala sie na poczatku (default ustawienie mrówy)
     
     case WM_CREATE:
 
-        p->AntX = round(p->liczba_kolumn/2);
-        p->AntY = round(p->liczba_wierszy/2);
-
-        SetTimer(h, 1, 1000, TimerProc);
+        
+        SetTimer(h, 1, 500, TimerProc);
         break;
 
     //Odpala sie by narysowac mape przy odswiezeniu (tylko czasem z jakiegoś powodu)
@@ -228,7 +228,8 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         break;
     }
     case WM_TIMER:
-        // Handle timer events (1-second delay)    
+        // Handle timer events (1-second delay)   
+        printf("Inside TimerProc\n"); 
         InvalidateRect(h, NULL, TRUE);
         
         break;
@@ -239,14 +240,6 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         PostQuitMessage(0);
         return 0;
     }
-    case WM_KEYDOWN:
-        switch (wP)
-        {
-        case VK_SPACE:
-            wykonajRuch();
-        }
-        InvalidateRect(h, NULL, TRUE);
-        break;
     default:
         return DefWindowProc(h, uMsg, wP, lP);
     }
@@ -310,7 +303,7 @@ int narysuj_plansze(plansza_podstawa p){
 
         for(int i = 0; i<p->ile_iteracji; i++)
         {
-            if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntX>p->liczba_wierszy-1))
+            if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntY>p->liczba_wierszy-1))
             {
                 printf("Mrowiszon wyjebal za mape");
                 return 1;
@@ -318,7 +311,6 @@ int narysuj_plansze(plansza_podstawa p){
             else{
                 wyswietlCmd(p, i);
                 wykonajRuch();
-                Sleep(1000);
             }
         }
         return 0;
