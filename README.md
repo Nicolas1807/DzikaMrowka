@@ -20,8 +20,9 @@ Flagi opcjonalne:
 Przykładowe uruchomienie programu:
 ./plansza.exe -i 20 -m 0 -k 55 -w 60 -f folder1 -p mapa.txt -d 0 -r 20
 Wartosci flag mozna dostosowac, stosujac sie do zalecen by uzyskac rozne efekty.
-=============================================
+
 Jesli chce sie wygenerowac nowa plansze do pliku korzystamy z programu gen.c:
+==============================================
 gcc gen.c
 ./a.exe pliktestowy.txt
 W ten sposob program wygeneruje nam plansze 0 i 1 ( pola biale i czarne)
