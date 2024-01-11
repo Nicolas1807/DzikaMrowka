@@ -14,12 +14,31 @@
 
 const wchar_t* arrowsBlack[] = {L"▲", L"▶", L"▼", L"◀"};
 const wchar_t* arrowsWhite[] = {L"△", L"▷", L"▽", L"◁"};
+char tmpname[1024];
 
-void wyswietlCmd(plansza_podstawa p) {
+void WypiszZapisz(FILE* f, int tryb, const wchar_t* wc)
+{
+    if(tryb == 0)
+    {
+        fwprintf(f, L"%ls", wc);
+    }
+    if(tryb == 1)
+    {
+        wprintf(L"%ls", wc);
+        fwprintf(f, L"%ls", wc);
+    }
+}
+
+void wyswietlCmd(plansza_podstawa p, int iteracja) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
     const wchar_t* wc = SQUARE_BLACK;
     int avoid = 0;
+    
+   
+    sprintf(tmpname, "%s\\file_%d.txt", p->NazwaFolderu, iteracja);
+    FILE *f = fopen(tmpname, "w");
+    
 
     for(int i = 0; i <= 2*(p->liczba_wierszy); i++)
     {
@@ -30,58 +49,65 @@ void wyswietlCmd(plansza_podstawa p) {
         else{
             avoid = 1;
         }
-        wprintf(L"\n");
+        WypiszZapisz(f, p->tryb, L"\n");
         for(int j = 0; j<= 2*(p->liczba_kolumn); j++)
         {
             if(i==0 && j==0) 
             {
                 wc = LINE_DOWN_RIGHT;
-                wprintf(L"%ls", wc);
+                WypiszZapisz(f, p->tryb, wc);
                 continue;
             }
             else if (i==0 && j==2*(p->liczba_kolumn))
             {
                 wc = LINE_DOWN_LEFT;
-                wprintf(L"%ls", wc);
+                WypiszZapisz(f, p->tryb, wc);
+                
                 continue;
             }
             else if (i==2*(p->liczba_wierszy) && j==0)
             {
                 wc = LINE_UP_RIGHT;
-                wprintf(L"%ls", wc);
+                WypiszZapisz(f, p->tryb, wc);
+
                 continue;
             }
             else if (i==2*(p->liczba_wierszy) && j==2*(p->liczba_kolumn))
             {
                 wc = LINE_UP_LEFT;
-                wprintf(L"%ls", wc);
+                WypiszZapisz(f, p->tryb, wc);
+
                 continue;
             }
             else{
                 if(avoid == 0){
                     wc = LINE_HORIZONTAL;
-                    wprintf(L"%ls", wc);
+                    WypiszZapisz(f, p->tryb, wc);
+
                     continue;
                 }
                 else{
                     if(j%2==0)
                     {
                         wc = LINE_VERTICAL;
-                        wprintf(L"%ls", wc);
+                        WypiszZapisz(f, p->tryb, wc);
+
                         continue;
                     }
                     else
                     {
                         if((p->AntY == (i-1)/2) && (p->AntX == (j-1)/2))
                         {
-                            if(p->template[(i-1)/2][(j-1)/2] == 0)
+                            if(p->template[(i-1)/2][(j-1)/2] == 1)
                             {
                                 wc = arrowsBlack[p->antDirection];
-                                wprintf(L"%ls", wc);
+                                WypiszZapisz(f, p->tryb, wc);
+
                             }
                             else{
                                 wc = arrowsWhite[p->antDirection];
-                                wprintf(L"%ls", wc);
+                                WypiszZapisz(f, p->tryb, wc);
+
                             }
                             continue;
                         }
@@ -94,7 +120,8 @@ void wyswietlCmd(plansza_podstawa p) {
                             wc = SQUARE_BLACK;
                         }
                         
-                        wprintf(L"%ls", wc);
+                        WypiszZapisz(f, p->tryb, wc);
+
                         continue;
                     }
                 }
@@ -106,5 +133,8 @@ void wyswietlCmd(plansza_podstawa p) {
         }
     }
 
+    
+    p->files[iteracja] = f;
+    fclose(f);
 
 }
