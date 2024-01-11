@@ -228,15 +228,12 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
         break;
     }
     case WM_TIMER:
-        // Handle timer events (1-second delay)   
-        printf("Inside TimerProc\n"); 
         InvalidateRect(h, NULL, TRUE);
         
         break;
     case WM_DESTROY:
     {
         KillTimer(h, 1);
-        printf("wylacza sie");
         PostQuitMessage(0);
         return 0;
     }
@@ -250,10 +247,10 @@ LRESULT CALLBACK WndProc(HWND h, UINT uMsg, WPARAM wP, LPARAM lP)
 int narysuj_plansze(plansza_podstawa p){
 
     if (_mkdir(p->NazwaFolderu) == 0) {
-        printf("Directory created successfully.\n");
+        printf("Folder Stworzony Pomyślnie\n");
     } 
     else {
-        perror("Error creating directory");
+        perror("Problem podczas tworzenia folderu");
         return 1;
     }
 
@@ -305,7 +302,7 @@ int narysuj_plansze(plansza_podstawa p){
         {
             if((p->AntX < 0) || (p->AntY < 0) || (p->AntX > p->liczba_kolumn-1) || (p->AntY>p->liczba_wierszy-1))
             {
-                printf("Mrowiszon wyjebal za mape");
+                printf("Mrowiszon wyszedl za mape");
                 return 1;
             }
             else{
@@ -324,10 +321,8 @@ void zwolnij_plansze(plansza_podstawa p){
     for(int i=0; i<p->liczba_wierszy;i++){
         free(p->template[i]);
     }
-    for(int j=0;j<p->ile_iteracji; j++)
-    {
-        free(p->files[j]);
-    }
+    
+    free(p->files);
     free(p->template);
     free(p);
 }
